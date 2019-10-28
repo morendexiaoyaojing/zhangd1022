@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.SpeakerDao">
+
+    <!-- 根据queryVo分页查询数据 -->
+<select id="findAll" resultType="com.qf.entity.Speaker">
+SELECT * FROM speaker
+<if test="start != null">
+    LIMIT #{start}, #{rows}
+</if>
+</select>
+
+        <!-- 根据queryVo查询数据条数 -->
+<select id="getCount" resultType="integer">
+        SELECT count(*) FROM speaker
+    </select>
+
+<update id="updateSpeakerById" parameterType="com.qf.entity.Speaker">
+        UPDATE speaker
+        SET speaker_name = #{speaker_name},speaker_desc = #{speaker_desc},
+            speaker_job = #{speaker_job} WHERE id = #{id};
+    </update>
+
+        <!-- 根据id查询用户 -->
+<select id="findSpeakerById" resultType="com.qf.entity.Speaker">
+        SELECT * FROM speaker WHERE id = #{id}
+    </select>
+        <!-- 根据id删除客户 -->
+<delete id="deleteSpeakerById" parameterType="integer">
+        DELETE FROM
+         speaker WHERE id = #{id}
+    </delete>
+
+<insert id="addSpeaker" >
+        insert  into speaker (speaker_name,speaker_desc,speaker_job)
+         values (#{speaker_name},#{speaker_desc},#{speaker_job})
+    </insert>
+<select id="getAll" resultType="com.qf.entity.Speaker">
+        select * from speaker
+    </select>
+
+        </mapper>

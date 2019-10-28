@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.dao.SubjectDao">
+
+
+    <!--分页-->
+    <select id="findAll" resultType="com.qf.entity.Subject">
+        SELECT * FROM subject
+        <if test="start != null">
+            LIMIT #{start}, #{rows}
+        </if>
+    </select>
+
+    <!-- 根据queryVo查询数据条数 -->
+    <select id="getCount" resultType="integer">
+        SELECT count(*) FROM subject
+    </select>
+
+    <update id="updateSubjectById" parameterType="com.qf.entity.Subject">
+        UPDATE subject
+        SET subject_name=#{subject_name} WHERE id = #{id};
+    </update>
+
+    <!-- 根据id查询用户 -->
+    <select id="findSubjectById" resultType="com.qf.entity.Subject">
+        SELECT * FROM subject WHERE id = #{id}
+    </select>
+    <!-- 根据id删除客户 -->
+    <delete id="deleteSubjectById" parameterType="integer">
+        DELETE FROM
+         subject WHERE id = #{id}
+    </delete>
+
+    <insert id="addSubject" >
+        insert  into subject (subject_name)
+         values (#{subject_name})
+    </insert>
+    <select id="getAll" resultType="com.qf.entity.Subject">
+        select * from subject
+    </select>
+
+    <resultMap id="subjectMap" type="com.qf.entity.Subject">
+        <id property="id" column="id"/>
+        <result property="subject_name" column="subject_name"/>
+        <collection property="courseList" ofType="com.qf.entity.Course">
+            <result property="course_title" column="course_title"/>
+            <result property="course_desc" column="course_desc"/>
+            <collection property="videoList" ofType="com.qf.entity.Video">
+                <id property="id" column="vid"/>
+                <result property="title" column="title"/>
+                <result property="image_url" column="image_url"/>
+                <result property="play_num" column="play_num"/>
+                <result property="time" column="time"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="findAllById" resultMap="subjectMap">
+        select s.id,
+        s.subject_name,
+        c.course_title,
+        c.course_desc,
+        v.id vid,
+        v.title,
+        v.image_url,
+        v.play_num,
+        v.time
+        from subject s
+        left join course c on s.id = c.subject_id
+        left join video v on c.id = v.course_id
+        <where>
+            s.id = #{id}
+        </where>
+    </select>
+
+
+</mapper>
